@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Audio editing demonstrations across musical styles and instruments">
+  <title>Music Editing Demo</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="masthead">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">≋</span><span>Music Editing <em>Demo</em></span></div>
+      <div class="masthead-meta">15 examples</div>
+    </header>
+
+    <section class="intro" aria-labelledby="page-title">
+      <h1 id="page-title">DEMONSTRATE, DON’T DESCRIBE:<br><span>LEARNING TRANSFERABLE MUSIC EDITS</span><br>FROM BEFORE–AFTER EXAMPLES</h1>
+    </section>
+
+    <section class="gallery-shell" aria-labelledby="instrument-title">
+      <div class="gallery-head">
+        <div>
+          <h2 id="instrument-title">Instrument editing</h2>
+        </div>
+        <div class="count">8 examples</div>
+      </div>
+      <div id="instrument-gallery" class="gallery" aria-live="polite">
+        <p class="loading">Loading audio examples…</p>
+      </div>
+    </section>
+    <section class="gallery-shell following-section" aria-labelledby="style-title">
+      <div class="gallery-head">
+        <div>
+          <h2 id="style-title">Music style editing</h2>
+        </div>
+        <div class="count">7 examples</div>
+      </div>
+      <div id="style-gallery" class="gallery" aria-live="polite">
+        <p class="loading">Loading audio examples…</p>
+      </div>
+    </section>
+  </main>
+  <script src="./catalog.js" defer></script>
+  <script src="./app.js" defer></script>
+</body>
+</html>
