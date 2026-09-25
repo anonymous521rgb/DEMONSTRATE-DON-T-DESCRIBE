@@ -1,7 +1,7 @@
 let catalog = [];
 
 const groups = {
-  style: ["classical", "country", "electronic", "jazz"],
+  style: ["classical", "country", "electronic", "jazz", "pop", "rock"],
   instrument: ["remove", "add", "replace"],
 };
 const groupTitles = {
