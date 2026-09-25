@@ -60,7 +60,7 @@ async function init() {
   try {
     const data = window.DEMO_CATALOG;
     if (!data) throw new Error("The demo catalog could not be loaded.");
-    if (data.count !== 15) throw new Error("The demo catalog is incomplete.");
+    if (data.count !== data.items.length) throw new Error("The demo catalog is incomplete.");
     catalog = data.items;
     renderDomain("style");
     renderDomain("instrument");
