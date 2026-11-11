@@ -72,6 +72,7 @@ function card(item, position) {
         <div class="pair-heading"><span class="pair-icon">↗</span><span>Transferred edit</span></div>
         ${audioBlock("Source", item.audio.query_before)}
         ${audioBlock(item.outputLabel || "Our output", item.audio.query_after, "outcome")}
+        ${item.audio.native_text ? audioBlock("MelodyFlow text editing", item.audio.native_text) : ''}
       </div>
       ${totals ? scorePanel(totals) : ''}
     </div>
@@ -80,7 +81,7 @@ function card(item, position) {
 
 function renderDomain(domain, showNew = false, target = domain) {
   const items = catalog.filter((item) => item.domain === domain);
-  if (domain === "partial") {
+  if (domain === "partial" || domain === "rare") {
     document.querySelector(`#${target}-gallery`).innerHTML = items.map((item, i) => card(item, i + 1)).join("");
     return;
   }
@@ -110,8 +111,9 @@ async function init() {
     renderDomain("style");
     renderDomain("instrument");
     renderDomain("partial");
+    renderDomain("rare");
   } catch (error) {
-    for (const domain of ["new", "new-style", ...Object.keys(groups)]) {
+    for (const domain of ["new", "new-style", "rare", ...Object.keys(groups)]) {
       document.querySelector(`#${domain}-gallery`).innerHTML = `<p class="error">${escapeHTML(error.message)}</p>`;
     }
   }
