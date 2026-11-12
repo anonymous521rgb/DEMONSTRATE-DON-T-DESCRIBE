@@ -73,28 +73,29 @@ function card(item, position) {
         ${audioBlock("Source", item.audio.query_before)}
         ${audioBlock(item.outputLabel || "Our output", item.audio.query_after, "outcome")}
         ${item.audio.native_text ? audioBlock("MelodyFlow text editing", item.audio.native_text) : ''}
+        ${item.audio.native_text && item.nativePrompt ? `<details class="metric-guide text-prompt">
+          <summary>Text prompt</summary>
+          <p>${escapeHTML(item.nativePrompt)}</p>
+        </details>` : ''}
       </div>
       ${totals ? scorePanel(totals) : ''}
     </div>
   </article>`;
 }
 
-function renderDomain(domain, showNew = false, target = domain) {
+function renderDomain(nextPosition, domain, showNew = false, target = domain) {
   const items = catalog.filter((item) => item.domain === domain);
   if (domain === "partial" || domain === "rare") {
-    document.querySelector(`#${target}-gallery`).innerHTML = items.map((item, i) => card(item, i + 1)).join("");
+    document.querySelector(`#${target}-gallery`).innerHTML = items.map((item) => card(item, nextPosition())).join("");
     return;
   }
-  let position = 0;
   const markup = groups[domain].map((group) => {
-    const members = items.filter((item) => item.subcategory === group)
-      .map((item) => ({item, number: ++position}))
-      .filter(({item}) => Boolean(item.isNew) === showNew);
+    const members = items.filter((item) => item.subcategory === group && Boolean(item.isNew) === showNew);
     if (!members.length) return "";
     const title = domain === "style" ? `${titleCase(group)} source` : groupTitles[group];
     return `<div class="subgroup" aria-label="${escapeHTML(title)}">
       <h3 class="subgroup-title">${escapeHTML(title)} · ${members.length}</h3>
-      ${members.map(({item, number}) => card(item, number)).join("")}
+      ${members.map((item) => card(item, nextPosition())).join("")}
     </div>`;
   }).join("");
   document.querySelector(`#${target}-gallery`).innerHTML = markup || `<p class="empty">No examples in this category.</p>`;
@@ -106,12 +107,14 @@ async function init() {
     if (!data) throw new Error("The demo catalog could not be loaded.");
     if (data.count !== data.items.length) throw new Error("The demo catalog is incomplete.");
     catalog = data.items;
-    renderDomain("instrument", true, "new");
-    renderDomain("style", true, "new-style");
-    renderDomain("style");
-    renderDomain("instrument");
-    renderDomain("partial");
-    renderDomain("rare");
+    let position = 0;
+    const nextPosition = () => ++position;
+    renderDomain(nextPosition, "instrument", true, "new");
+    renderDomain(nextPosition, "style", true, "new-style");
+    renderDomain(nextPosition, "partial");
+    renderDomain(nextPosition, "rare");
+    renderDomain(nextPosition, "instrument");
+    renderDomain(nextPosition, "style");
   } catch (error) {
     for (const domain of ["new", "new-style", "rare", ...Object.keys(groups)]) {
       document.querySelector(`#${domain}-gallery`).innerHTML = `<p class="error">${escapeHTML(error.message)}</p>`;
