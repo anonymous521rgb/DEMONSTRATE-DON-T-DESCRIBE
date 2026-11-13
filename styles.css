@@ -87,6 +87,14 @@ audio { display: block; width: 100%; height: 43px; }
 .metric-guide dd { margin: .2em 0 0; color: var(--muted); line-height: 1.45; }
 .text-prompt { margin-top: 10px; }
 .text-prompt p { margin: .55em 0 0; color: var(--muted); line-height: 1.55; }
+.drums-scroll { overflow-x: auto; }
+.drums-table { width: 100%; min-width: 760px; border-collapse: collapse; table-layout: fixed; }
+.drums-table th, .drums-table td { padding: 16px; border-top: 1px solid var(--stroke); text-align: left; vertical-align: top; }
+.drums-table th { font-weight: 750; }
+.drums-table thead { background: var(--surface-light); }
+.drums-table th:first-child { width: 36%; }
+.drums-table :is(th, td) + :is(th, td) { border-left: 1px solid var(--stroke); }
+.drums-instruments { display: block; margin: 6px 0 12px; color: var(--muted); font-size: .85rem; font-weight: 500; }
 
 @media (max-width: 760px) {
   .shell { width: min(100% - 24px, 1140px); }

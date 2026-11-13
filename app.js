@@ -18,8 +18,6 @@ const metrics = [
 ];
 // Illustrative totals on a six-rating scale, in ET/SP/TEA/AQ order.
 const scoreTotals = {
-  N01: [22, 19, 18, 19],
-  N02: [19, 23, 17, 25],
   N07: [24, 7, 25, 23],
   N03: [17, 8, 19, 18],
   N04: [25, 13, 23, 24],
@@ -34,6 +32,43 @@ const escapeHTML = (value) => String(value).replace(/[&<>"']/g, (char) => ({
 
 function audioBlock(label, url, modifier = "") {
   return `<div class="audio-block ${modifier}"><div class="audio-label">${label}</div><audio controls preload="none" src="${escapeHTML(url)}" aria-label="${label}"></audio></div>`;
+}
+
+function renderDrumsComparison(position) {
+  document.querySelector("#drums-comparison").innerHTML = `<article class="sample-card">
+    <div class="sample-top sample-top-new">
+      <span class="new-badge">New</span>
+      <div class="sample-index">${String(position).padStart(2, "0")}</div>
+      <div class="sample-ident"><h3 id="drums-title">Add Drums · Listening comparison</h3></div>
+    </div>
+    <div class="drums-scroll" role="region" aria-labelledby="drums-title" tabindex="0">
+      <table class="drums-table">
+        <thead><tr>
+          <th scope="col">Demonstration references <span class="drums-instruments">X = drums</span></th>
+          <th scope="col">Query B <span class="drums-instruments">Piano + acoustic guitar</span>${audioBlock("Query B source", "audio/new-1-source.flac")}</th>
+          <th scope="col">Query C <span class="drums-instruments">Piano + electric guitar + bass</span>${audioBlock("Query C source", "audio/new-2-source.flac")}</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <th scope="row">A → A + X <span class="drums-instruments">Piano + acoustic guitar + bass → same instruments + drums</span>
+              ${audioBlock("A · Before", "audio/drums-a-before.flac")}
+              ${audioBlock("A + X · After", "audio/drums-a-after.flac")}
+            </th>
+            <td>${audioBlock("Edited output", "audio/drums-a-b.flac", "outcome")}</td>
+            <td>${audioBlock("Edited output", "audio/new-2-output.flac", "outcome")}</td>
+          </tr>
+          <tr>
+            <th scope="row">D → D + X <span class="drums-instruments">Bass → bass + drums</span>
+              ${audioBlock("D · Before", "audio/drums-d-before.flac")}
+              ${audioBlock("D + X · After", "audio/drums-d-after.flac")}
+            </th>
+            <td>${audioBlock("Edited output", "audio/new-1-output.flac", "outcome")}</td>
+            <td>${audioBlock("Edited output", "audio/drums-d-c.flac", "outcome")}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </article>`;
 }
 
 function scorePanel(totals) {
@@ -72,9 +107,9 @@ function card(item, position) {
         <div class="pair-heading"><span class="pair-icon">↗</span><span>Transferred edit</span></div>
         ${audioBlock("Source", item.audio.query_before)}
         ${audioBlock(item.outputLabel || "Our output", item.audio.query_after, "outcome")}
-        ${item.audio.native_text ? audioBlock("MelodyFlow text editing", item.audio.native_text) : ''}
+        ${item.audio.native_text ? audioBlock(item.comparisonLabel || "MelodyFlow text editing", item.audio.native_text) : ''}
         ${item.audio.native_text && item.nativePrompt ? `<details class="metric-guide text-prompt">
-          <summary>Text prompt</summary>
+          <summary>${escapeHTML(item.promptLabel || "Text prompt")}</summary>
           <p>${escapeHTML(item.nativePrompt)}</p>
         </details>` : ''}
       </div>
@@ -85,7 +120,7 @@ function card(item, position) {
 
 function renderDomain(nextPosition, domain, showNew = false, target = domain) {
   const items = catalog.filter((item) => item.domain === domain);
-  if (domain === "partial" || domain === "rare") {
+  if (["partial", "rare", "compound"].includes(domain)) {
     document.querySelector(`#${target}-gallery`).innerHTML = items.map((item) => card(item, nextPosition())).join("");
     return;
   }
@@ -109,14 +144,17 @@ async function init() {
     catalog = data.items;
     let position = 0;
     const nextPosition = () => ++position;
+    renderDrumsComparison(nextPosition());
     renderDomain(nextPosition, "instrument", true, "new");
     renderDomain(nextPosition, "style", true, "new-style");
     renderDomain(nextPosition, "partial");
     renderDomain(nextPosition, "rare");
+    renderDomain(nextPosition, "compound");
     renderDomain(nextPosition, "instrument");
     renderDomain(nextPosition, "style");
   } catch (error) {
-    for (const domain of ["new", "new-style", "rare", ...Object.keys(groups)]) {
+    document.querySelector("#drums-comparison").innerHTML = `<p class="error">${escapeHTML(error.message)}</p>`;
+    for (const domain of ["new", "new-style", "rare", "compound", ...Object.keys(groups)]) {
       document.querySelector(`#${domain}-gallery`).innerHTML = `<p class="error">${escapeHTML(error.message)}</p>`;
     }
   }

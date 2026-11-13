@@ -6,7 +6,7 @@
   <meta name="description" content="Audio editing demonstrations across musical styles and instruments">
   <title>Music Editing Demo</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
-  <link rel="stylesheet" href="./styles.css?v=shamisen-prompt">
+  <link rel="stylesheet" href="./styles.css?v=drums-listening">
 </head>
 <body>
   <main class="shell">
@@ -24,6 +24,7 @@
         <h2 id="new-title">New examples</h2>
         <div class="count">9 examples</div>
       </div>
+      <div id="drums-comparison" class="gallery" aria-live="polite"></div>
       <div id="new-gallery" class="gallery" aria-live="polite"></div>
       <div id="new-style-gallery" class="gallery" aria-live="polite"></div>
       <div class="subgroup new-partial" aria-labelledby="partial-title">
@@ -31,8 +32,12 @@
         <div id="partial-gallery" class="gallery" aria-live="polite"></div>
       </div>
       <div class="subgroup new-partial" aria-labelledby="rare-title">
-        <h3 id="rare-title" class="subgroup-title">Rare instrument · 1</h3>
+        <h3 id="rare-title" class="subgroup-title">New instrument · 1</h3>
         <div id="rare-gallery" class="gallery" aria-live="polite"></div>
+      </div>
+      <div class="subgroup new-partial" aria-labelledby="compound-title">
+        <h3 id="compound-title" class="subgroup-title">New edit type · 1</h3>
+        <div id="compound-gallery" class="gallery" aria-live="polite"></div>
       </div>
     </section>
     <section class="gallery-shell following-section" aria-labelledby="instrument-title">
@@ -58,7 +63,7 @@
       </div>
     </section>
   </main>
-  <script src="./catalog.js?v=shamisen-prompt" defer></script>
-  <script src="./app.js?v=sequential-numbers" defer></script>
+  <script src="./catalog.js?v=compound-order" defer></script>
+  <script src="./app.js?v=compound-order" defer></script>
 </body>
 </html>
